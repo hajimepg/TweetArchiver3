@@ -1,3 +1,5 @@
+import tweets from "./tweets";
+
 import Vue from "vue";
 
 /* tslint:disable:object-literal-sort-keys */
@@ -8,11 +10,14 @@ const app = new Vue({
     <section class="tweets">
         <article class="tweet">
             <div class="icon">
-                <img src="hajimepg.jpg" width="48px" height="48px">
+                <img v-bind:src="tweets[0].iconFileName" width="48px" height="48px">
             </div>
-            <div class="name"><strong>はじぴー</strong><span>@hajimepg</span></div>
-            <div class="text">ねむねむ</div>
-            <div class="time">Tue Dec 12 12:37:56 +0000 2017</div>
+            <div class="name">
+                <strong>{{ tweets[0].originalTweet.user.name }}</strong>
+                <span>@{{ tweets[0].originalTweet.user.screen_name }}</span>
+            </div>
+            <div class="text">{{ tweets[0].autoLinkedText }}</div>
+            <div class="time">{{ tweets[0].originalTweet.created_at }}</div>
         </article>
 
         <article class="tweet">
@@ -109,6 +114,9 @@ const app = new Vue({
         </article>
     </section>
 </div>
-`
+`,
+    data: {
+        tweets
+    },
 });
 /* tslint:enable:object-literal-sort-keys */
