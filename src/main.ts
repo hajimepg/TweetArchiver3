@@ -18,6 +18,10 @@ const app = new Vue({
             </div>
             <div v-html="tweet.autoLinkedText" class="text"></div>
             <div class="time">{{ tweet.originalTweet.created_at }}</div>
+            <img v-for="m in tweet.media"
+                v-bind:src="m.fileName"
+                v-bind:height="m.displayHeight"
+                v-bind:width="m.displayWidth">
         </article>
     </section>
 </div>
