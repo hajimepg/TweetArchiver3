@@ -16,7 +16,7 @@ const app = new Vue({
                 <strong>{{ tweet.originalTweet.user.name }}</strong>
                 <span>@{{ tweet.originalTweet.user.screen_name }}</span>
             </div>
-            <div class="text">{{ tweet.autoLinkedText }}</div>
+            <div v-html="tweet.autoLinkedText" class="text"></div>
             <div class="time">{{ tweet.originalTweet.created_at }}</div>
         </article>
     </section>
