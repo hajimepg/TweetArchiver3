@@ -10,8 +10,12 @@
     <body>
         <div id="app">
             <div class="container">
+                <form class="search">
+                    <label>Search</label>
+                    <input type="text" v-model="search">
+                </form>
                 <section class="tweets">
-                    <article v-for="tweet in tweets" class="tweet">
+                    <article v-for="tweet in filteredTweets" class="tweet">
                         <div class="icon">
                             <img v-bind:src="tweet.iconFileName" width="48px" height="48px">
                         </div>
