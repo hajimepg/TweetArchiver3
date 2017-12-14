@@ -8,6 +8,6 @@ import * as KoaStatic from "koa-static";
 const app = new Koa();
 
 app.use(KoaStatic(path.join(__dirname, "../../html")));
-app.use(KoaStatic(path.join(__dirname, "../../dist")));
+app.use(KoaStatic(path.join(__dirname, "../client")));
 
 app.listen(3000);
