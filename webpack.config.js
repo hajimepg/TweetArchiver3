@@ -17,6 +17,7 @@ module.exports = {
     resolve: {
         extensions: [".ts"],
         alias: {
+            "axios$": "axios/dist/axios.js",
             "vue$": "vue/dist/vue.esm.js"
         }
     }
