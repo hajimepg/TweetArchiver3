@@ -1,5 +1,3 @@
-import tweets from "./tweets";
-
 import axios from "axios";
 import Vue from "vue";
 
@@ -7,7 +5,7 @@ import Vue from "vue";
 const app = new Vue({
     el: "#app",
     data: {
-        tweets,
+        tweets: [] as any[],
         search: ""
     },
     computed: {
@@ -17,6 +15,10 @@ const app = new Vue({
     },
     mounted() {
         axios.get("http://localhost:3000/api/tweets")
+            .then((response) => {
+                console.log(response.data);
+                this.$data.tweets = response.data;
+            })
             .catch((error) => {
                 console.log(error);
             });
