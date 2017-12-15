@@ -6,7 +6,19 @@ const app = new Vue({
     el: "#app",
     data: {
         tweets: [] as any[],
+        add: "",
         search: ""
+    },
+    methods: {
+        addTweet() {
+            axios.post("http://localhost:3000/api/tweet")
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     },
     computed: {
         filteredTweets(): any[] {
@@ -16,7 +28,6 @@ const app = new Vue({
     mounted() {
         axios.get("http://localhost:3000/api/tweets")
             .then((response) => {
-                console.log(response.data);
                 this.$data.tweets = response.data;
             })
             .catch((error) => {

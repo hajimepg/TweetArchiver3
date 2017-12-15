@@ -38,6 +38,10 @@
     font-size: 13px;
 }
 
-form.search {
+form.search, form.add {
     padding: 10px;
+}
+
+form input {
+    width: 70%;
 }

@@ -46,6 +46,12 @@ router.get("/api/tweets", async (ctx, next) => {
     }
 });
 
+router.post("/api/tweet", (ctx, next) => {
+    console.log("/api/tweet called.");
+
+    ctx.body = {};
+});
+
 app.use(router.routes());
 
 const tweetRepository = new TweetRepository();
