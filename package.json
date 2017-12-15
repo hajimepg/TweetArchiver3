@@ -5,13 +5,16 @@
   "license": "MIT",
   "dependencies": {
     "@types/koa": "^2.0.42",
+    "@types/nedb": "^1.8.5",
     "@types/node": "^8.0.57",
     "axios": "^0.17.1",
     "koa": "^2.4.1",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
+    "nedb": "^1.8.0",
     "ts-loader": "^3.2.0",
     "tslint": "^5.8.0",
+    "twitter-text": "^1.14.7",
     "typescript": "^2.6.2",
     "vue": "^2.5.9",
     "webpack": "^3.10.0"
