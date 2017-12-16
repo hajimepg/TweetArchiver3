@@ -5,6 +5,7 @@ import * as url from "url";
 
 import * as Koa from "koa";
 import * as KoaBodyParser from "koa-body-parser";
+import * as KoaMount from "koa-mount";
 import * as KoaRouter from "koa-router";
 import * as KoaStatic from "koa-static";
 import * as TwitterText from "twitter-text";
@@ -21,6 +22,8 @@ const twitterGateway = new TwitterGateway({
 
 const app = new Koa();
 
+app.use(KoaMount("/media", KoaStatic(path.join(__dirname, "../../db/media"))));
+app.use(KoaMount("/icons", KoaStatic(path.join(__dirname, "../../db/icons"))));
 app.use(KoaStatic(path.join(__dirname, "../../static")));
 app.use(KoaStatic(path.join(__dirname, "../client")));
 
@@ -52,7 +55,11 @@ router.get("/api/tweets", async (ctx, next) => {
                 media.displayWidth = media.width;
                 media.displayHeight = media.height;
             }
+
+            media.fileName = "media/" + media.fileName;
         }
+
+        tweet.iconFileName = "icons/" + tweet.iconFileName;
 
         ctx.body = tweets;
     }
