@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
 
@@ -10,6 +11,7 @@ import * as KoaRouter from "koa-router";
 import * as KoaStatic from "koa-static";
 import * as TwitterText from "twitter-text";
 
+import { downloadMedia, downloadProfileImage } from "./downloadImage";
 import TweetRepository from "./tweetRepository";
 import TwitterGateway from "./twitterGateway";
 
@@ -22,8 +24,18 @@ const twitterGateway = new TwitterGateway({
 
 const app = new Koa();
 
-app.use(KoaMount("/media", KoaStatic(path.join(__dirname, "../../db/media"))));
-app.use(KoaMount("/icons", KoaStatic(path.join(__dirname, "../../db/icons"))));
+const iconDirName = path.join(__dirname, "../../db/icons");
+if (fs.existsSync(iconDirName) === false) {
+    fs.mkdirSync(iconDirName);
+}
+
+const mediaDirName = path.join(__dirname, "../../db/media");
+if (fs.existsSync(mediaDirName) === false) {
+    fs.mkdirSync(mediaDirName);
+}
+
+app.use(KoaMount("/icons", KoaStatic(iconDirName)));
+app.use(KoaMount("/media", KoaStatic(mediaDirName)));
 app.use(KoaStatic(path.join(__dirname, "../../static")));
 app.use(KoaStatic(path.join(__dirname, "../client")));
 
@@ -79,6 +91,18 @@ function parseTweetId(urlString): string | null {
     return regExpResult[1];
 }
 
+function imageFileExistsWithBaseName(dirName: string, baseName: string): string | null {
+    for (const iconExtension of ["jpg", "png"]) {
+        const iconFullPath = path.join(dirName, `${baseName}.${iconExtension}`);
+
+        if (fs.existsSync(iconFullPath)) {
+            return `${baseName}.${iconExtension}`;
+        }
+    }
+
+    return null;
+}
+
 router.post("/api/tweet", async (ctx, next) => {
     console.log(`/api/tweet called. ctx.request.body.url=${ctx.request.body.url}`);
 
@@ -91,6 +115,43 @@ router.post("/api/tweet", async (ctx, next) => {
 
     const tweet = await twitterGateway.getTweet((tweetId as string));
     console.log(JSON.stringify(tweet, null, 4));
+
+    const iconBaseFileName = tweet.user.screen_name;
+
+    let iconFileName = imageFileExistsWithBaseName(iconDirName, iconBaseFileName);
+
+    if (iconFileName === null) {
+        iconFileName = await downloadProfileImage(tweet.user.profile_image_url,
+            iconDirName, iconBaseFileName);
+    }
+
+    const media = new Array<object>();
+    if (tweet.extended_entities !== undefined) {
+        for (const mediaEntity of tweet.extended_entities.media) {
+            const mediaBaseName = mediaEntity.id_str;
+            let mediaFileName = imageFileExistsWithBaseName(mediaDirName, mediaBaseName);
+
+            if (mediaFileName === null) {
+                mediaFileName = await downloadMedia(mediaEntity.media_url, mediaDirName, mediaBaseName);
+            }
+
+            media.push({
+                fileName: mediaFileName,
+                height: mediaEntity.sizes.medium.h,
+                width: mediaEntity.sizes.medium.w
+            });
+        }
+    }
+
+    /* tslint:disable:object-literal-sort-keys */
+    const newDoc = {
+        originalTweet : tweet,
+        iconFileName,
+        media,
+    };
+    /* tslint:enable:object-literal-sort-keys */
+
+    await tweetRepository.insert(newDoc);
 
     ctx.body = {};
 });
