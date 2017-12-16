@@ -15,7 +15,7 @@ const app = new Vue({
                     url: this.$data.add
                 })
                 .then((response) => {
-                    console.log(response);
+                    this.$data.tweets.unshift(response.data);
                 })
                 .catch((error) => {
                     console.log(error);

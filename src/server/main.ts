@@ -43,38 +43,42 @@ app.use(KoaBodyParser());
 
 const router = new KoaRouter();
 
+function convertDbTweetToClientTweet(tweet: any) {
+    tweet.autoLinkedText = TwitterText.autoLink(
+        tweet.originalTweet.text,
+        { urlEntities: tweet.originalTweet.entities.urls }
+    );
+
+    for (const media of tweet.media) {
+        if (media.width >= media.height && media.width > 400) {
+            const resizeRate = media.width / 400;
+            media.displayWidth = media.width / resizeRate;
+            media.displayHeight = media.height / resizeRate;
+        }
+        else if (media.height > media.width && media.height > 400) {
+            const resizeRate = media.height / 400;
+            media.displayWidth = media.width / resizeRate;
+            media.displayHeight = media.height / resizeRate;
+        }
+        else {
+            media.displayWidth = media.width;
+            media.displayHeight = media.height;
+        }
+
+        media.fileName = "media/" + media.fileName;
+    }
+
+    tweet.iconFileName = "icons/" + tweet.iconFileName;
+}
+
 router.get("/api/tweets", async (ctx, next) => {
     const tweets = await tweetRepository.find({});
 
     for (const tweet of tweets) {
-        tweet.autoLinkedText = TwitterText.autoLink(
-            tweet.originalTweet.text,
-            { urlEntities: tweet.originalTweet.entities.urls }
-        );
-
-        for (const media of tweet.media) {
-            if (media.width >= media.height && media.width > 400) {
-                const resizeRate = media.width / 400;
-                media.displayWidth = media.width / resizeRate;
-                media.displayHeight = media.height / resizeRate;
-            }
-            else if (media.height > media.width && media.height > 400) {
-                const resizeRate = media.height / 400;
-                media.displayWidth = media.width / resizeRate;
-                media.displayHeight = media.height / resizeRate;
-            }
-            else {
-                media.displayWidth = media.width;
-                media.displayHeight = media.height;
-            }
-
-            media.fileName = "media/" + media.fileName;
-        }
-
-        tweet.iconFileName = "icons/" + tweet.iconFileName;
-
-        ctx.body = tweets;
+        convertDbTweetToClientTweet(tweet);
     }
+
+    ctx.body = tweets;
 });
 
 function parseTweetId(urlString): string | null {
@@ -151,9 +155,11 @@ router.post("/api/tweet", async (ctx, next) => {
     };
     /* tslint:enable:object-literal-sort-keys */
 
-    await tweetRepository.insert(newDoc);
+    const insertedDoc = await tweetRepository.insert(newDoc);
 
-    ctx.body = {};
+    convertDbTweetToClientTweet(insertedDoc);
+
+    ctx.body = insertedDoc;
 });
 
 app.use(router.routes());
