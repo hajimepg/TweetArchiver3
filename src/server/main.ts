@@ -3,6 +3,7 @@
 import * as path from "path";
 
 import * as Koa from "koa";
+import * as KoaBodyParser from "koa-body-parser";
 import * as KoaRouter from "koa-router";
 import * as KoaStatic from "koa-static";
 import * as TwitterText from "twitter-text";
@@ -13,6 +14,8 @@ const app = new Koa();
 
 app.use(KoaStatic(path.join(__dirname, "../../static")));
 app.use(KoaStatic(path.join(__dirname, "../client")));
+
+app.use(KoaBodyParser());
 
 const router = new KoaRouter();
 
@@ -47,7 +50,7 @@ router.get("/api/tweets", async (ctx, next) => {
 });
 
 router.post("/api/tweet", (ctx, next) => {
-    console.log("/api/tweet called.");
+    console.log(`/api/tweet called. ctx.request.body.url=${ctx.request.body.url}`);
 
     ctx.body = {};
 });

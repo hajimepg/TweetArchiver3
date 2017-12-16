@@ -11,7 +11,9 @@ const app = new Vue({
     },
     methods: {
         addTweet() {
-            axios.post("http://localhost:3000/api/tweet")
+            axios.post("http://localhost:3000/api/tweet", {
+                    url: this.$data.add
+                })
                 .then((response) => {
                     console.log(response);
                 })
