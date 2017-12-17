@@ -7,6 +7,7 @@ const app = new Vue({
     data: {
         tweets: [] as any[],
         add: "",
+        addError: false,
         search: ""
     },
     methods: {
@@ -16,10 +17,11 @@ const app = new Vue({
                 })
                 .then((response) => {
                     this.$data.add = "";
+                    this.$data.addError = false;
                     this.$data.tweets.unshift(response.data);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    this.$data.addError = true;
                 });
         }
     },

@@ -1,6 +1,6 @@
 .container {
     width: 600px;
-    margin: 0 auto;
+    margin: 10px auto 0 auto;
 }
 
 .tweets {
@@ -40,6 +40,11 @@
 
 form.search, form.add {
     padding: 10px;
+}
+
+form.error {
+    background-color: rgb(255, 231, 240);
+    border: solid 1px rgb(255, 170, 170);
 }
 
 form input {

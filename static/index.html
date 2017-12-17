@@ -10,7 +10,7 @@
     <body>
         <div id="app">
             <div class="container">
-                <form class="add">
+                <form class="add" v-bind:class="{ error: addError }">
                     <label>Add</label><br>
                     <input type="text" placeholder="https://twitter.com/hajimepg/status/941695644128854017" v-model="add">
                     <button type="button" v-on:click="addTweet">Add</button>
