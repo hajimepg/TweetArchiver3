@@ -112,7 +112,12 @@ router.post("/api/tweet", async (ctx, next) => {
 
     const tweetId = parseTweetId(ctx.request.body.url);
     if (tweetId === null) {
-        ctx.throw(400);
+        ctx.response.status = 400;
+        ctx.response.body = {
+            error: {
+                message: "Invalid URL"
+            }
+        };
         return;
     }
     console.log(`tweetId = ${tweetId}`);

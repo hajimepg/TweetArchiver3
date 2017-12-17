@@ -7,7 +7,10 @@ const app = new Vue({
     data: {
         tweets: [] as any[],
         add: "",
-        addError: false,
+        addError: {
+            isError: false,
+            message: ""
+        },
         search: ""
     },
     methods: {
@@ -17,17 +20,23 @@ const app = new Vue({
                 })
                 .then((response) => {
                     this.$data.add = "";
-                    this.$data.addError = false;
+                    this.$data.addError.isError = false;
                     this.$data.tweets.unshift(response.data);
                 })
                 .catch((error) => {
-                    this.$data.addError = true;
+                    this.$data.addError.isError = true;
+                    this.$data.addError.message = error.response.data.error.message;
                 });
         }
     },
     computed: {
         filteredTweets(): any[] {
             return this.tweets.filter((t) => t.originalTweet.text.indexOf(this.search) !== -1);
+        },
+        addClass(): object {
+            return {
+                error: this.addError.isError
+            };
         }
     },
     mounted() {
