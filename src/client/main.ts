@@ -1,5 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
+import VueInfiniteLoading from "vue-infinite-loading";
 
 /* tslint:disable:object-literal-sort-keys */
 const app = new Vue({
@@ -54,6 +55,9 @@ const app = new Vue({
     },
     mounted() {
         this.loadTweets();
+    },
+    components: {
+        "infinite-loading": VueInfiniteLoading
     }
 });
 /* tslint:enable:object-literal-sort-keys */

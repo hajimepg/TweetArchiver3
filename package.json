@@ -20,6 +20,7 @@
     "twitter-text": "^1.14.7",
     "typescript": "^2.6.2",
     "vue": "^2.5.9",
+    "vue-infinite-loading": "^2.2.3",
     "webpack": "^3.10.0"
   }
 }
