@@ -45,13 +45,16 @@ export default class TweetRepository {
 
     public async find(condition): Promise<any[]> {
         return new Promise<any[]>((resolve, reject) => {
-            this.db.find(condition, (error, newDocs) => {
-                if (error !== null) {
-                    reject(error);
-                }
+            this.db
+                .find(condition)
+                .sort({ "originalTweet.id": -1 })
+                .exec((error, newDocs) => {
+                    if (error !== null) {
+                        reject(error);
+                    }
 
-                resolve(newDocs);
-            });
+                    resolve(newDocs);
+                });
         });
     }
 }
