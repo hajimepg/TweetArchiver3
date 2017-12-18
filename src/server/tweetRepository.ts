@@ -43,11 +43,12 @@ export default class TweetRepository {
         });
     }
 
-    public async find(condition): Promise<any[]> {
+    public async find(condition, limit: number): Promise<any[]> {
         return new Promise<any[]>((resolve, reject) => {
             this.db
                 .find(condition)
                 .sort({ "originalTweet.id": -1 })
+                .limit(limit)
                 .exec((error, newDocs) => {
                     if (error !== null) {
                         reject(error);

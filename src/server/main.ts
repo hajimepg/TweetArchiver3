@@ -72,7 +72,8 @@ function convertDbTweetToClientTweet(tweet: any) {
 }
 
 router.get("/api/tweets", async (ctx, next) => {
-    const tweets = await tweetRepository.find({});
+    const limit = 10;
+    const tweets = await tweetRepository.find({}, limit);
 
     for (const tweet of tweets) {
         convertDbTweetToClientTweet(tweet);
