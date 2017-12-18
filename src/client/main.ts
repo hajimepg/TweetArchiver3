@@ -27,6 +27,19 @@ const app = new Vue({
                     this.$data.addError.isError = true;
                     this.$data.addError.message = error.response.data.error.message;
                 });
+        },
+        loadTweets() {
+            axios.get("http://localhost:3000/api/tweets", {
+                params: {
+                    offset: this.$data.tweets.length
+                }
+            })
+            .then((response) => {
+                this.$data.tweets.push(...response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         }
     },
     computed: {
@@ -40,13 +53,7 @@ const app = new Vue({
         }
     },
     mounted() {
-        axios.get("http://localhost:3000/api/tweets")
-            .then((response) => {
-                this.$data.tweets = response.data;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        this.loadTweets();
     }
 });
 /* tslint:enable:object-literal-sort-keys */
