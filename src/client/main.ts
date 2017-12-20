@@ -29,7 +29,7 @@ const app = new Vue({
                     this.$data.addError.message = error.response.data.error.message;
                 });
         },
-        loadTweets() {
+        loadTweets($state) {
             axios.get("http://localhost:3000/api/tweets", {
                 params: {
                     offset: this.$data.tweets.length
@@ -37,6 +37,7 @@ const app = new Vue({
             })
             .then((response) => {
                 this.$data.tweets.push(...response.data);
+                $state.loaded();
             })
             .catch((error) => {
                 console.log(error);
@@ -52,9 +53,6 @@ const app = new Vue({
                 error: this.addError.isError
             };
         }
-    },
-    mounted() {
-        this.loadTweets();
     },
     components: {
         "infinite-loading": VueInfiniteLoading
