@@ -36,8 +36,13 @@ const app = new Vue({
                 }
             })
             .then((response) => {
-                this.$data.tweets.push(...response.data);
-                $state.loaded();
+                if (response.data.length > 0) {
+                    this.$data.tweets.push(...response.data);
+                    $state.loaded();
+                }
+                else {
+                    $state.complete();
+                }
             })
             .catch((error) => {
                 console.log(error);
