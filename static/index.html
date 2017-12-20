@@ -37,7 +37,9 @@
                             v-bind:width="m.displayWidth">
                     </article>
                 </section>
-                 <infinite-loading v-on:infinite="loadTweets"></infinite-loading>
+                 <infinite-loading v-on:infinite="loadTweets">
+                    <span slot="no-more">No more data</span>
+                 </infinite-loading>
             </div>
         </div>
         <script src="bundle.js"></script>
